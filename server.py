@@ -1,10 +1,9 @@
 """
-FastAPI server for handling frontend requests and managing API services.
+FastAPI server for handling web requests and managing API services.
 """
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
-from typing import Dict, Any
 
 from ApiServices.weather_service import WeatherService
 from ApiServices.transport_service import TransportService
@@ -14,7 +13,7 @@ from ApiServices.spotify_service import SpotifyService
 from ApiServices.position_service import PositionService
 from ApiServices.config_service import ConfigService
 from ApiServices.frontend_service import FrontendService
-from config import Config
+from config_reader import Config
 
 
 class APIServer:
@@ -58,7 +57,7 @@ class APIServer:
         
         @self.app.get("/api/config")
         async def get_config():
-            """Get frontend configuration."""
+            """Get web configuration."""
             try:
                 data = await self.config_service.get_config()
                 return data
@@ -147,7 +146,7 @@ class APIServer:
             raise HTTPException(status_code=503, detail="Button service not available")
     
     def _mount_frontend(self):
-        """Mount frontend static files."""
+        """Mount web static files."""
         try:
             self.frontend_service.mount_frontend(self.app)
         except FileNotFoundError as e:

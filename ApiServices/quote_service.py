@@ -4,7 +4,7 @@ Quote API service for fetching random quotes.
 import httpx
 from typing import Dict, Any
 
-from config import Config
+from config_reader import Config
 
 
 class QuoteService:

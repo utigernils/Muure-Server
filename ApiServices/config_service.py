@@ -2,17 +2,17 @@
 Service for handling configuration data.
 """
 from typing import Dict, Any
-from config import Config
+from config_reader import Config
 
 
 class ConfigService:
-    """Handles configuration data for the frontend."""
+    """Handles configuration data for the web."""
     
     def __init__(self, config: Config):
         self.config = config
     
     async def get_config(self) -> Dict[str, Any]:
-        """Get frontend configuration."""
+        """Get web configuration."""
         return {
             "myName": self.config.my_name,
             "anniversaryDate": self.config.anniversary_date,

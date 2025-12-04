@@ -4,7 +4,7 @@ Transport API service for fetching public transport departure information.
 import httpx
 from typing import Dict, Any, List
 
-from config import Config
+from config_reader import Config
 
 
 class TransportService:

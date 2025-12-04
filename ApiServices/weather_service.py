@@ -5,7 +5,7 @@ import httpx
 from typing import Dict, Any, List
 from datetime import datetime
 
-from config import Config
+from config_reader import Config
 
 
 class WeatherService:

@@ -9,7 +9,7 @@ from typing import List, Dict, Any
 class StateManager:
     """Manages persistent state for the display."""
     
-    def __init__(self, state_file: str = "display_state.json"):
+    def __init__(self, state_file: str = "api_state.json"):
         self.state_file = Path(state_file)
         self.pages = [
             {
