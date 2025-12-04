@@ -16,14 +16,14 @@ class StateManager:
 
         # All available widgets
         self.widgets = [
-            {"widget": "Anniversary", "title": "Jahrestag", "icon": "heart"},
-            {"widget": "Calendar", "title": "Kalender", "icon": "calendar"},
-            {"widget": "CurrentWeather", "title": "Wetter", "icon": "thermometer"},
-            {"widget": "ForecastWeather", "title": "Wettervorhersage", "icon": "cloud-sun"},
-            {"widget": "Map", "title": f"Wo ist {self.config.my_name}", "icon": "map"},
-            {"widget": "Quote", "title": "Zitat", "icon": "quote"},
-            {"widget": "Spotify", "title": f"Was hört {self.config.my_name}", "icon": "music"},
-            {"widget": "Transport", "title": "Fahrplan", "icon": "rail-symbol"},
+            {"widget": "Anniversary", "title": "Jahrestag", "icon": "Heart"},
+            {"widget": "Calendar", "title": "Kalender", "icon": "Calendar"},
+            {"widget": "CurrentWeather", "title": "Wetter", "icon": "Thermometer"},
+            {"widget": "ForecastWeather", "title": "Wettervorhersage", "icon": "CloudSun"},
+            {"widget": "Map", "title": f"Wo ist {self.config.my_name}", "icon": "Map"},
+            {"widget": "Quote", "title": "Zitat", "icon": "Quote"},
+            {"widget": "Spotify", "title": f"Was hört {self.config.my_name}", "icon": "Music"},
+            {"widget": "Transport", "title": "Fahrplan", "icon": "RailSymbol"},
         ]
 
         self.state = self._load_state()
