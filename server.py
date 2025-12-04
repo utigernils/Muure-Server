@@ -1,10 +1,9 @@
 """
-FastAPI server for handling frontend requests and managing API services.
+FastAPI server for handling web requests and managing API services.
 """
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
-from typing import Dict, Any
 
 from ApiServices.weather_service import WeatherService
 from ApiServices.transport_service import TransportService
@@ -14,7 +13,8 @@ from ApiServices.spotify_service import SpotifyService
 from ApiServices.position_service import PositionService
 from ApiServices.config_service import ConfigService
 from ApiServices.frontend_service import FrontendService
-from config import Config
+from config_reader import Config
+from state_manager import StateManager
 
 
 class APIServer:
@@ -22,6 +22,7 @@ class APIServer:
     
     def __init__(self, config: Config):
         self.config = config
+        self.state_manager = StateManager()
         self.app = FastAPI(title="Muure Backend API")
         
         self.weather_service = WeatherService(config)
@@ -30,18 +31,12 @@ class APIServer:
         self.calendar_service = CalendarService(config)
         self.spotify_service = SpotifyService(config)
         self.position_service = PositionService(config)
-        self.config_service = ConfigService(config)
+        self.config_service = ConfigService(config, self.state_manager)
         self.frontend_service = FrontendService()
-        
-        self.button_service = None
     
         self._setup_cors()
         self._setup_routes()
         self._mount_frontend()
-    
-    def set_button_service(self, button_service):
-        """Set the button service for API control."""
-        self.button_service = button_service
     
     def _setup_cors(self):
         """Configure CORS middleware."""
@@ -58,7 +53,7 @@ class APIServer:
         
         @self.app.get("/api/config")
         async def get_config():
-            """Get frontend configuration."""
+            """Get web configuration."""
             try:
                 data = await self.config_service.get_config()
                 return data
@@ -130,24 +125,26 @@ class APIServer:
             except Exception as e:
                 raise HTTPException(status_code=500, detail=str(e))
         
-        @self.app.post("/api/buttons/next")
-        async def trigger_next_button():
-            """Trigger next button press."""
-            if self.button_service:
-                self.button_service.trigger_next()
-                return {"success": True, "action": "next"}
-            raise HTTPException(status_code=503, detail="Button service not available")
+        @self.app.post("/api/widgets/left/next")
+        async def next_left_widget():
+            """Switch to next left widget."""
+            try:
+                self.state_manager.next_left_widget()
+                return {"success": True, "widget": self.state_manager.get_left_widget()}
+            except Exception as e:
+                raise HTTPException(status_code=500, detail=str(e))
         
-        @self.app.post("/api/buttons/prev")
-        async def trigger_prev_button():
-            """Trigger previous button press."""
-            if self.button_service:
-                self.button_service.trigger_prev()
-                return {"success": True, "action": "prev"}
-            raise HTTPException(status_code=503, detail="Button service not available")
+        @self.app.post("/api/widgets/right/next")
+        async def next_right_widget():
+            """Switch to next right widget."""
+            try:
+                self.state_manager.next_right_widget()
+                return {"success": True, "widget": self.state_manager.get_right_widget()}
+            except Exception as e:
+                raise HTTPException(status_code=500, detail=str(e))
     
     def _mount_frontend(self):
-        """Mount frontend static files."""
+        """Mount web static files."""
         try:
             self.frontend_service.mount_frontend(self.app)
         except FileNotFoundError as e:

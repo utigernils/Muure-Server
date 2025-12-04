@@ -6,7 +6,7 @@ import base64
 from typing import Dict, Any, Optional
 from datetime import datetime, timedelta
 
-from config import Config
+from config_reader import Config
 
 
 class SpotifyService:

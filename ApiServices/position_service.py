@@ -3,7 +3,7 @@ Position service for fetching current position data.
 """
 from typing import Dict, Any
 
-from config import Config
+from config_reader import Config
 
 
 class PositionService:

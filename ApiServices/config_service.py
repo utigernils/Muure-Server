@@ -2,17 +2,19 @@
 Service for handling configuration data.
 """
 from typing import Dict, Any
-from config import Config
+from config_reader import Config
+from state_manager import StateManager
 
 
 class ConfigService:
-    """Handles configuration data for the frontend."""
+    """Handles configuration data for the web."""
     
-    def __init__(self, config: Config):
+    def __init__(self, config: Config, state_manager: StateManager):
         self.config = config
+        self.state_manager = state_manager
     
     async def get_config(self) -> Dict[str, Any]:
-        """Get frontend configuration."""
+        """Get web configuration."""
         return {
             "myName": self.config.my_name,
             "anniversaryDate": self.config.anniversary_date,
@@ -23,6 +25,6 @@ class ConfigService:
                 "latitude": self.config.location_latitude,
                 "longitude": self.config.location_longitude
             },
-            "leftWidgets": self.config.left_widgets,
-            "rightWidgets": self.config.right_widgets
+            "leftWidgets": [self.state_manager.get_left_widget()],
+            "rightWidgets": [self.state_manager.get_right_widget()]
         }
