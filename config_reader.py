@@ -44,41 +44,6 @@ class Config:
         self.spotify_client_id = os.getenv("SPOTIFY_CLIENT_ID", "")
         self.spotify_client_secret = os.getenv("SPOTIFY_CLIENT_SECRET", "")
         self.spotify_refresh_token = os.getenv("SPOTIFY_REFRESH_TOKEN", "")
-        
-        # Widget configuration for the two dynamic containers
-        # LEFT_WIDGETS and RIGHT_WIDGETS can be JSON arrays defining widgets to display
-        # Format: [{"widget": "Map", "title": "Wo ist {myName}?", "icon": "Map"}]
-        left_widgets_env = os.getenv("LEFT_WIDGETS", "")
-        right_widgets_env = os.getenv("RIGHT_WIDGETS", "")
-        
-        # Default left container widget
-        default_left = [
-            {"widget": "Map", "title": f"Wo ist {self.my_name}?", "icon": "Map"}
-        ]
-        
-        # Default right container widgets (bottom section, clock is separate)
-        default_right = [
-            {"widget": "Anniversary", "title": "Jahrestag", "icon": "Heart"}
-        ]
-        
-        # Parse or use defaults
-        if left_widgets_env:
-            try:
-                parsed = json.loads(left_widgets_env)
-                self.left_widgets = parsed if isinstance(parsed, list) else default_left
-            except Exception:
-                self.left_widgets = default_left
-        else:
-            self.left_widgets = default_left
-            
-        if right_widgets_env:
-            try:
-                parsed = json.loads(right_widgets_env)
-                self.right_widgets = parsed if isinstance(parsed, list) else default_right
-            except Exception:
-                self.right_widgets = default_right
-        else:
-            self.right_widgets = default_right
     
     def validate(self):
         """Validate that all required configuration values are set."""
