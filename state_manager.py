@@ -40,8 +40,7 @@ class StateManager:
         # default widget positions
         return {
             "left_widget_index": 0,
-            "right_widget_index": 1,
-            "last_update": None
+            "right_widget_index": 1
         }
 
     def _save_state(self):

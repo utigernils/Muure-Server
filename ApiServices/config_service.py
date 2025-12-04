@@ -21,10 +21,6 @@ class ConfigService:
             "googleMapsApiKey": self.config.google_maps_api_key,
             "googleMapsZoom": self.config.google_maps_zoom,
             "googleMapsStyle": self.config.google_maps_style,
-            "location": {
-                "latitude": self.config.location_latitude,
-                "longitude": self.config.location_longitude
-            },
-            "leftWidgets": [self.state_manager.get_left_widget()],
-            "rightWidgets": [self.state_manager.get_right_widget()]
+            "leftWidget": self.state_manager.get_left_widget(),
+            "rightWidget": self.state_manager.get_right_widget()
         }
