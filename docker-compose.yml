@@ -1,0 +1,15 @@
+services:
+  muure-server:
+    build: .
+    container_name: muure-server
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api_state.json:/app/api_state.json
+    environment:
+      - SERVER_HOST=0.0.0.0
+      - SERVER_PORT=8000
+      # Add other environment variables here or use an env_file
+    env_file:
+      - .env
+    restart: unless-stopped
