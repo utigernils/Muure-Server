@@ -34,6 +34,7 @@ class Config:
         
         self.location_latitude = float(os.getenv("LOCATION_LATITUDE", "47.532"))
         self.location_longitude = float(os.getenv("LOCATION_LONGITUDE", "7.588"))
+        self.position_api_url = os.getenv("POSITION_API_URL", "")
         
         self.my_name = os.getenv("MY_NAME", "")
         self.anniversary_date = os.getenv("ANNIVERSARY_DATE", "")
