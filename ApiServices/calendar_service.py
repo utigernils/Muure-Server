@@ -6,6 +6,7 @@ from typing import Dict, Any, List, Optional
 from datetime import datetime, date, timedelta
 from icalendar import Calendar
 import pytz
+import recurring_ical_events
 
 
 class CalendarService:
@@ -30,42 +31,47 @@ class CalendarService:
                 now = datetime.now(self.timezone)
                 today = now.date()
                 
+                # Look ahead 365 days for events
+                end_date = today + timedelta(days=365)
+                
+                # Get all events (including recurring ones) in range
+                expanded_events = recurring_ical_events.of(cal).between(today, end_date)
+                
                 # Extract events from calendar
-                for component in cal.walk():
-                    if component.name == "VEVENT":
-                        event_start = component.get('dtstart')
-                        if not event_start:
-                            continue
+                for component in expanded_events:
+                    event_start = component.get('dtstart')
+                    if not event_start:
+                        continue
+                    
+                    # Handle both datetime and date objects
+                    if hasattr(event_start.dt, 'date'):
+                        # Convert to local timezone if it's timezone-aware
+                        event_datetime = event_start.dt
+                        if event_datetime.tzinfo is not None:
+                            event_datetime = event_datetime.astimezone(self.timezone)
                         
-                        # Handle both datetime and date objects
-                        if hasattr(event_start.dt, 'date'):
-                            # Convert to local timezone if it's timezone-aware
-                            event_datetime = event_start.dt
-                            if event_datetime.tzinfo is not None:
-                                event_datetime = event_datetime.astimezone(self.timezone)
-                            
-                            event_date = event_datetime.date()
-                            event_time = event_datetime.time()
-                            is_all_day = False
-                        else:
-                            event_date = event_start.dt
-                            event_time = None
-                            is_all_day = True
+                        event_date = event_datetime.date()
+                        event_time = event_datetime.time()
+                        is_all_day = False
+                    else:
+                        event_date = event_start.dt
+                        event_time = None
+                        is_all_day = True
+                    
+                    # Only include today and future events (double check as between might include overlapping)
+                    if event_date >= today:
+                        summary = str(component.get('summary', 'No title'))
+                        description = str(component.get('description', ''))
+                        location = str(component.get('location', ''))
                         
-                        # Only include today and future events
-                        if event_date >= today:
-                            summary = str(component.get('summary', 'No title'))
-                            description = str(component.get('description', ''))
-                            location = str(component.get('location', ''))
-                            
-                            events.append({
-                                'date': event_date.isoformat(),
-                                'time': event_time.isoformat() if event_time else None,
-                                'is_all_day': is_all_day,
-                                'title': summary,
-                                'description': description,
-                                'location': location
-                            })
+                        events.append({
+                            'date': event_date.isoformat(),
+                            'time': event_time.isoformat() if event_time else None,
+                            'is_all_day': is_all_day,
+                            'title': summary,
+                            'description': description,
+                            'location': location
+                        })
                 
                 # Sort events by date and time
                 events.sort(key=lambda x: (x['date'], x['time'] or '00:00:00'))
