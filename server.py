@@ -126,6 +126,18 @@ class APIServer:
                 return Response(content=image_bytes, media_type="image/png")
             except Exception as e:
                 raise HTTPException(status_code=500, detail=str(e))
+
+        @self.app.get("/api/map/position")
+        async def get_position_meta():
+            """Get the position for the current static map."""
+            try:
+                location = self.state_manager.get_location()
+                location_splits = location.split(", ")
+
+                location_object = {"address":location_splits[0], "city":location_splits[1], "country":location_splits[2]}
+                return location_object
+            except Exception as e:
+                raise HTTPException(status_code=500, detail=str(e))
         
         @self.app.post("/api/widgets/left/next")
         async def next_left_widget():
