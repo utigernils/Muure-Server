@@ -134,6 +134,9 @@ class APIServer:
                 location = self.state_manager.get_location()
                 location_splits = location.split(", ")
 
+                if len(location_splits) != 3:
+                    raise HTTPException(status_code=500, detail=str("Location string arrived in an unexpected format."))
+
                 location_object = {"address":location_splits[0], "city":location_splits[1], "country":location_splits[2]}
                 return location_object
             except Exception as e:
