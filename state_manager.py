@@ -69,17 +69,13 @@ class StateManager:
         self._save_state()
         print(f"Right widget is now: {self.get_right_widget()['widget']}")
 
-    def get_position(self) -> Dict[str, float]:
-        """Get the last known position from state."""
-        position = self.state.get("position", {})
-        return {
-            "latitude": position.get("latitude"),
-            "longitude": position.get("longitude"),
-        }
+    def get_location(self) -> str:
+        """Get the last known location from state."""
+        return self.state.get("location", "")
 
-    def set_position(self, latitude: float, longitude: float):
-        """Persist the current position to state."""
-        self.state["position"] = {"latitude": latitude, "longitude": longitude}
+    def set_location(self, location: str):
+        """Persist the current location to state."""
+        self.state["location"] = location
         self._save_state()
 
     def update_timestamp(self, timestamp: str):

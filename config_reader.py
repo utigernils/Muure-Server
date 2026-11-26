@@ -36,6 +36,10 @@ class Config:
         self.location_longitude = float(os.getenv("LOCATION_LONGITUDE", "7.588"))
         self.position_api_url = os.getenv("POSITION_API_URL", "")
         
+        self.homeassistant_url = os.getenv("HOME_ASSISTANT_URL", "")
+        self.homeassistant_api_key = os.getenv("HOME_ASSISTANT_API_KEY", "")
+        self.homeassistant_sensor_id = os.getenv("HOME_ASSISTANT_SENSOR_ID", "sensor.oppo_geocoded_location")
+        
         self.my_name = os.getenv("MY_NAME", "")
         self.anniversary_date = os.getenv("ANNIVERSARY_DATE", "")
         

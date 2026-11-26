@@ -3,6 +3,7 @@ Map service for generating and caching static map images.
 """
 from io import BytesIO
 from pathlib import Path
+from urllib.parse import quote_plus
 
 import httpx
 from PIL import Image, ImageDraw
@@ -27,33 +28,25 @@ class MapService:
         self.cache_path = Path("map_cache.png")
 
     async def get_map_image(self) -> bytes:
-        """Return the map image, only refetching from Google when the position changed."""
-        position = await self.position_service.get_position()
-        latitude = round(position["latitude"], 5)
-        longitude = round(position["longitude"], 5)
+        """Return the map image, only refetching from Google when the location changed."""
+        location = await self.position_service.get_location()
 
-        last_position = self.state_manager.get_position()
-
-        if (
-            self.cache_path.exists()
-            and last_position.get("latitude") == latitude
-            and last_position.get("longitude") == longitude
-        ):
+        if self.cache_path.exists() and self.state_manager.get_location() == location:
             return self.cache_path.read_bytes()
 
-        image_bytes = await self._fetch_static_map(latitude, longitude)
+        image_bytes = await self._fetch_static_map(location)
         image_bytes = self._process_image(image_bytes)
 
         self.cache_path.write_bytes(image_bytes)
-        self.state_manager.set_position(latitude, longitude)
+        self.state_manager.set_location(location)
 
         return image_bytes
 
-    async def _fetch_static_map(self, latitude: float, longitude: float) -> bytes:
+    async def _fetch_static_map(self, location: str) -> bytes:
         """Fetch a static map image from Google Maps."""
         url = (
             "https://maps.googleapis.com/maps/api/staticmap"
-            f"?center={latitude},{longitude}"
+            f"?center={quote_plus(location)}"
             f"&zoom={self.config.google_maps_zoom}"
             "&size=640x480"
             f"&key={self.config.google_maps_api_key}"
