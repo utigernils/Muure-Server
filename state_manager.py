@@ -4,7 +4,7 @@ State manager for persisting and managing display state.
 import json
 from config_reader import Config
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import Dict, Any
 
 
 class StateManager:
@@ -68,6 +68,15 @@ class StateManager:
         self.state["right_widget_index"] = (self.state["right_widget_index"] + 1) % len(self.widgets)
         self._save_state()
         print(f"Right widget is now: {self.get_right_widget()['widget']}")
+
+    def get_location(self) -> str:
+        """Get the last known location from state."""
+        return self.state.get("location", "")
+
+    def set_location(self, location: str):
+        """Persist the current location to state."""
+        self.state["location"] = location
+        self._save_state()
 
     def update_timestamp(self, timestamp: str):
         """Update last update timestamp."""
