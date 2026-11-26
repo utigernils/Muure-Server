@@ -4,7 +4,7 @@ State manager for persisting and managing display state.
 import json
 from config_reader import Config
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import Dict, Any
 
 
 class StateManager:

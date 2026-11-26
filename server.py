@@ -118,15 +118,6 @@ class APIServer:
             except Exception as e:
                 raise HTTPException(status_code=500, detail=str(e))
         
-        @self.app.get("/api/position")
-        async def get_position():
-            """Get current position data."""
-            try:
-                data = await self.position_service.get_position()
-                return data
-            except Exception as e:
-                raise HTTPException(status_code=500, detail=str(e))
-        
         @self.app.get("/api/map")
         async def get_map_image():
             """Get the current static map image."""
