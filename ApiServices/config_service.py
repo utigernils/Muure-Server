@@ -18,9 +18,6 @@ class ConfigService:
         return {
             "myName": self.config.my_name,
             "anniversaryDate": self.config.anniversary_date,
-            "googleMapsApiKey": self.config.google_maps_api_key,
-            "googleMapsZoom": self.config.google_maps_zoom,
-            "googleMapsStyle": self.config.google_maps_style,
             "leftWidget": self.state_manager.get_left_widget(),
             "rightWidget": self.state_manager.get_right_widget()
         }

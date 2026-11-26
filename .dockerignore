@@ -11,3 +11,5 @@ venv/
 .idea/
 .vscode/
 *.log
+api_state.json
+map_cache.png

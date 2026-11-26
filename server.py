@@ -1,7 +1,7 @@
 """
 FastAPI server for handling web requests and managing API services.
 """
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
@@ -11,6 +11,7 @@ from ApiServices.quote_service import QuoteService
 from ApiServices.calendar_service import CalendarService
 from ApiServices.spotify_service import SpotifyService
 from ApiServices.position_service import PositionService
+from ApiServices.map_service import MapService
 from ApiServices.config_service import ConfigService
 from ApiServices.frontend_service import FrontendService
 from config_reader import Config
@@ -31,6 +32,7 @@ class APIServer:
         self.calendar_service = CalendarService(config)
         self.spotify_service = SpotifyService(config)
         self.position_service = PositionService(config)
+        self.map_service = MapService(config, self.state_manager, self.position_service)
         self.config_service = ConfigService(config, self.state_manager)
         self.frontend_service = FrontendService()
     
@@ -122,6 +124,15 @@ class APIServer:
             try:
                 data = await self.position_service.get_position()
                 return data
+            except Exception as e:
+                raise HTTPException(status_code=500, detail=str(e))
+        
+        @self.app.get("/api/map")
+        async def get_map_image():
+            """Get the current static map image."""
+            try:
+                image_bytes = await self.map_service.get_map_image()
+                return Response(content=image_bytes, media_type="image/png")
             except Exception as e:
                 raise HTTPException(status_code=500, detail=str(e))
         
